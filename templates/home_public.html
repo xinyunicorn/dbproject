@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"
+    />
+
+    <title>Home</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href={{ url_for('static', filename='./css/home.css')
+    }}>
+  </head>
+
+  <body class="p-0 m-0 border-0">
+    <!-- BEGIN BOOTSTRAP NAVBAR -->
+    <div class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+      <div class="container-fluid justify-content-between">
+        <a onclick="window.location.reload()" class="link"
+          ><p class="navbar-brand logo">City Jail Database</p></a
+        >
+        <a href="/logout"
+          ><button type="button" class="btn btn-primary" id="logoutBtn">
+            Logout
+          </button></a
+        >
+      </div>
+    </div>
+    <!-- END BOOTSTRAP NAVBAR -->
+
+    <!-- BEGIN TRACK CRIMINAL MODAL -->
+    <div
+      class="modal fade"
+      id="trackModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">
+              Track Criminal
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+              onclick="toggleInactive()"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="trackForm" method="post" action="/track_criminal_record">
+              <div id="inputs">
+                <div class="form-group row">
+                  <input
+                    type="text"
+                    class="form-control w-50 mx-auto"
+                    name="new_attribute_input"
+                    id="firstName"
+                    name="first_name"
+                    placeholder="Enter Criminal's First Name"
+                  />
+                </div>
+                <div class="form-group row">
+                  <input
+                    type="text"
+                    class="form-control w-50 mx-auto"
+                    name="old_attribute_input"
+                    id="lastName"
+                    name="last_name"
+                    placeholder="Enter Criminal's Last Name"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+              onclick="toggleInactive()"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="showRecord">
+              Show Criminal Record
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END TRACK CRIMINAL MODAL -->
+
+    <!-- BEGIN CRUD BUTTONS -->
+    <div class="buttons">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary">
+          <input
+            type="radio"
+            name="options"
+            id="option1"
+            value="search"
+            autocomplete="off"
+          />
+          Query/Search
+        </label>
+      </div>
+      <!-- Track Criminal (using stored procedure) -->
+      <div class="trackBtn">
+        <!-- Button trigger modal -->
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-toggle="modal"
+          data-target="#trackModal"
+          id="trackBtn"
+          onclick="toggleActive()"
+        >
+          Track Criminal
+        </button>
+      </div>
+    </div>
+    <!-- END CRUD BUTTONS -->
+
+    <div class="container">
+      <!-- BEGIN TABLE DROPDOWN -->
+      <div class="dropdown right">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Tables
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#" onclick="showTable(this, 'crime')"
+            >Crime</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'criminal')"
+            >Criminal</a
+          >
+          <a class="dropdown-item" href="#" onclick="showTable(this, 'alias')"
+            >Alias</a
+          >
+          <a class="dropdown-item" href="#" onclick="showTable(this, 'appeal')"
+            >Appeal</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'sentence')"
+            >Sentence</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'crime_officer')"
+            >Crime Officer</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'prob_officer')"
+            >Probation Officer</a
+          >
+          <a class="dropdown-item" href="#" onclick="showTable(this, 'officer')"
+            >Officer</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'crime_charge')"
+            >Crime Charge</a
+          >
+          <a
+            class="dropdown-item"
+            href="#"
+            onclick="showTable(this, 'crime_code')"
+            >Crime Code</a
+          >
+        </div>
+      </div>
+      <!-- END TABLE DROPDOWN -->
+
+      <!-- BEGIN ATTRIBUTE DROPDOWN -->
+      <div class="input-group mb-3 left">
+        <div class="input-group-prepend">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            id="dropdownMain"
+          >
+            Attribute
+          </button>
+          <div
+            class="dropdown-menu"
+            aria-labelledby="dropdownMain"
+            id="attributeDropdown"
+          ></div>
+        </div>
+        <input
+          type="text"
+          class="form-control"
+          id="inputDropdown"
+          aria-label="Text input with dropdown button"
+        />
+        <div class="input-group-prepend">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            id="dropdownSort"
+          >
+            Sort
+          </button>
+          <div
+            class="dropdown-menu"
+            aria-labelledby="dropdownSort"
+            id="sortDropdown"
+          ></div>
+        </div>
+        <button
+          id="toggleBtn"
+          data-toggle="button"
+          type="button"
+          class="btn btn-secondary"
+          onclick="toggleText()"
+        >
+          Order
+        </button>
+        <input
+          class="btn btn-secondary"
+          data-toggle="button"
+          id="submitBtn"
+          type="submit"
+          onclick="submitForm()"
+        />
+      </div>
+      <!-- END ATTRIBUTE DROPDOWN -->
+    </div>
+
+    <!-- BEGIN TABLE INPUT FROM DATABASE -->
+    <table class="table table-striped" id="data-table">
+      <thead></thead>
+      <tbody></tbody>
+    </table>
+    <!-- END TABLE INPUT FROM DATABASE -->
+
+    <script type="text/javascript">
+      let selectedTable = "";
+
+      function showAttr(item) {
+        let elem = document.getElementById("dropdownMain");
+        elem.innerHTML = item.innerHTML;
+        elem.style.color = "#fff";
+        elem.style.backgroundColor = "#0062cc";
+        elem.style.borderColor = "#005cbf";
+      }
+
+      function showAttrSort(item) {
+        let elem = document.getElementById("dropdownSort");
+        elem.innerHTML = item.innerHTML;
+        elem.style.color = "#fff";
+        elem.style.backgroundColor = "#0062cc";
+        elem.style.borderColor = "#005cbf";
+      }
+
+      function showTable(item, tablename) {
+        let elem = document.getElementById("dropdownMenuButton");
+        elem.innerHTML = item.innerHTML;
+        elem.style.color = "#fff";
+        elem.style.backgroundColor = "#0062cc";
+        elem.style.borderColor = "#005cbf";
+
+        // Make AJAX request to fetch attributes corresponding to the selected table
+        selectedTable = tablename;
+        fetch(`/get_attributes/${selectedTable}`)
+          .then((response) => response.json())
+          .then((attributes) => {
+            // Clear existing options in the attribute dropdown
+            let attributeDropdown =
+              document.getElementById("attributeDropdown");
+            attributeDropdown.innerHTML = "";
+
+            // Populate attribute dropdown with fetched attributes
+            attributes.forEach((attribute) => {
+              let option = document.createElement("a");
+              option.classList.add("dropdown-item");
+              option.href = "#";
+              option.textContent = attribute;
+              option.onclick = function () {
+                showAttr(this);
+              };
+              attributeDropdown.appendChild(option);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching attributes:", error);
+          });
+        fetch(`/get_attributes/${selectedTable}`)
+          .then((response) => response.json())
+          .then((attributes) => {
+            // Clear existing options in the attribute dropdown
+            let sortDropdown = document.getElementById("sortDropdown");
+            sortDropdown.innerHTML = "";
+
+            // Populate attribute dropdown with fetched attributes
+            attributes.forEach((attribute) => {
+              let option = document.createElement("a");
+              option.classList.add("dropdown-item");
+              option.href = "#";
+              option.textContent = attribute;
+              option.onclick = function () {
+                showAttrSort(this);
+              };
+              sortDropdown.appendChild(option);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching attributes:", error);
+          });
+      }
+
+      function displayDataInTable(data) {
+        let table = document.querySelector("#data-table");
+        let tbody = table.querySelector("tbody");
+        let thead = table.querySelector("thead");
+
+        // Clear existing table content
+        tbody.innerHTML = "";
+        thead.innerHTML = "";
+
+        fetch(`/get_attributes/${selectedTable}`)
+          .then((response) => response.json())
+          .then((attributes) => {
+            let headerRow = document.createElement("tr");
+            headerRow.innerHTML = "";
+
+            // Populate attribute dropdown with fetched attributes
+            attributes.forEach((attribute) => {
+              let th = document.createElement("th");
+              th.textContent = attribute;
+              th.setAttribute("scope", "col");
+              headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+          })
+          .catch((error) => {
+            console.error("Error fetching attributes:", error);
+          });
+
+        // Populate table body with data rows
+        data.forEach((row) => {
+          let tr = document.createElement("tr");
+          Object.values(row).forEach((value) => {
+            let td = document.createElement("td");
+            td.textContent = value;
+            td.setAttribute("scope", "row");
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+      }
+
+      function toggleText() {
+        var btn = document.getElementById("toggleBtn");
+        if (btn.innerHTML == "ASC") {
+          btn.innerHTML = "DESC";
+        } else {
+          btn.innerHTML = "ASC";
+        }
+      }
+
+      function toggleActive() {
+        let elem = document.getElementById("trackBtn");
+        if (elem.classList.contains("active")) {
+          elem.classList.remove("active");
+        } else {
+          elem.classList.add("active");
+        }
+      }
+
+      function toggleInactive() {
+        let elem = document.getElementById("trackBtn");
+        if (elem.classList.contains("active")) {
+          elem.classList.remove("active");
+        } else {
+          elem.classList.add("active");
+        }
+      }
+
+      function displayTrackCriminal(rows) {
+        let table = document.querySelector("#data-table");
+        let tbody = table.querySelector("tbody");
+        let thead = table.querySelector("thead");
+
+        // Clear existing table content
+        tbody.innerHTML = "";
+        thead.innerHTML = "";
+
+        // Create table header row
+        let headerRow = document.createElement("tr");
+        for (let key in rows[0]) {
+          let th = document.createElement("th");
+          th.textContent = key;
+          th.setAttribute("scope", "col");
+          headerRow.appendChild(th);
+        }
+        thead.appendChild(headerRow);
+
+        // Populate table body with data rows
+        rows.forEach((row) => {
+          let tr = document.createElement("tr");
+          for (let key in row) {
+            let td = document.createElement("td");
+            if (row[key] === "J") {
+              row[key] = "Jail Period";
+            }
+            if (row[key] === "H") {
+              row[key] = "House Arrest";
+            }
+            if (row[key] === "P") {
+              row[key] = "Probation";
+            }
+            if (row[key] == "CL") {
+              row[key] = "Closed";
+            }
+            if (row[key] == "CA") {
+              row[key] = "In Appeal";
+            }
+            if (row[key] == "IA") {
+              row[key] = "Can Appeal";
+            }
+            if (row[key] == "Y") {
+              row[key] = "Yes";
+            }
+            td.textContent = row[key];
+            td.setAttribute("scope", "row");
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        });
+      }
+
+      document
+        .getElementById("showRecord")
+        .addEventListener("click", function () {
+          let firstName = document.getElementById("firstName").value;
+          let lastName = document.getElementById("lastName").value;
+
+          console.log(firstName);
+          console.log(lastName);
+          if (!firstName || !lastName) {
+            alert("Please enter both first and last names.");
+            return;
+          }
+
+          fetch(`/track_criminal_record/${firstName}/${lastName}`, {
+            method: "POST",
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+              }
+              // Return the response JSON promise
+              return response.json();
+            })
+            .then((data) => {
+              console.log(data);
+              if (data.length > 0) {
+                displayTrackCriminal(data);
+                alert("Criminal record tracked successfully!");
+              } else {
+                alert("No criminal record found for the provided names.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("An error occurred while fetching data from the server.");
+            });
+        });
+
+      function submitForm() {
+        // Get selected table, attribute, order and CRUD operation
+        let crud = document.querySelector(
+          'input[name="options"]:checked'
+        ).value;
+        console.log(crud);
+
+        let operator = "=";
+
+        let attribute = document
+          .getElementById("dropdownMain")
+          .innerText.trim();
+
+        if (attribute === "Attribute") {
+          attribute = "";
+        }
+
+        console.log(attribute);
+
+        // Get the input content (if any)
+        let content = document.getElementById("inputDropdown").value;
+        console.log(content);
+
+        // Get the sort_attribute (if any)
+        let sort_attribute = document
+          .getElementById("dropdownSort")
+          .innerText.trim();
+
+        if (sort_attribute === "Sort") {
+          sort_attribute = "";
+        }
+
+        console.log(sort_attribute);
+
+        // Get the order (if any)
+        let order = document.getElementById("toggleBtn").innerText.trim();
+
+        if (order === "Order") {
+          order = "";
+        }
+        console.log(order);
+
+        // SEARCH OPERATION (without condition, without sort)
+        // Construct the URL
+        if (crud == "search" && content == "" && sort_attribute == "") {
+          let url = `/${crud}/${selectedTable}`;
+          // fetch info from url
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Fetched data:", data);
+              // Call function to display the fetched data in the table
+              displayDataInTable(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+
+        // SEARCH OPERATION (without condition, with sort)
+        else if (crud == "search" && content == "") {
+          let url = `/${crud}/${selectedTable}/${sort_attribute}/${order}`;
+          // fetch info from url
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Fetched data:", data);
+              // Call function to display the fetched data in the table
+              displayDataInTable(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+
+        // SEARCH OPERATION (with condition, without sort)
+        else if (crud == "search" && sort_attribute == "") {
+          let url = `/${crud}/${selectedTable}/${attribute}/${operator}/${content}`;
+          // fetch info from url
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Fetched data:", data);
+              // Call function to display the fetched data in the table
+              displayDataInTable(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+
+        // SEARCH OPERATION (with condition, with sort)
+        else if (crud == "search") {
+          let url = `/${crud}/${selectedTable}/${attribute}/${operator}/${content}/${sort_attribute}/${order}`;
+          // fetch info from url
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Fetched data:", data);
+              // Call function to display the fetched data in the table
+              displayDataInTable(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+      }
+    </script>
+  </body>
+</html>

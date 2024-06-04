@@ -1,0 +1,28 @@
+<!-- static html - client side but we want it to be dynamic-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" href={{ url_for('static', filename='./css/style.css') }}>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <h2>Hello</h2>
+    <h3>Hello</h3>
+    <p>Lorem Ipsum</p>
+    <ul>
+        <li>Element 1</li>
+        <li>Element 2</li>
+    </ul>
+    <h1>Hotel Names</h1>
+    <!-- {% for your_list_element in your_list %}
+    <p>{{ your_list_element }} </p>
+    {% endfor %} -->
+    {% for hotelname in hotelnames %}
+    <p>{{ hotelname }}</p>
+    {% endfor %}
+
+  </body>
+</html>

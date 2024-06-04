@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.left {
+  width: 60%;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.logo {
+  color: white;
+  margin: 0;
+  padding: 10px;
+}
+
+.btn {
+  margin-left: 20px;
+}
+
+.focus,
+.active {
+  color: #fff !important;
+  background-color: #0062cc !important;
+  border-color: #005cbf !important;
+}
+
+#dropdownSort {
+  border-radius: 0.25rem;
+}
+
+.updateBtn .btn {
+  margin-right: 20px;
+}
+
+.updateBtn {
+  margin-left: 0;
+}
+
+#new,
+#old {
+  width: 45%;
+}
+
+.link {
+  cursor: pointer;
+}

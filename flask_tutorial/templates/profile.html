@@ -1,0 +1,16 @@
+<!-- static html - client side but we want it to be dynamic-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <!-- x need filepath? ./css , the static will look for the static folder -->
+    <link rel="stylesheet" href={{ url_for('static', filename='./css/style.css') }}>
+  </head>
+  <body>
+    <!-- How could you dynamically change names in here?? -->
+    <!-- curly braces - backend  -->
+    <h1>Hello {{thename}}</h1>
+  </body>
+</html>
